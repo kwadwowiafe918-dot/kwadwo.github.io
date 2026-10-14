@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #f0f2f5;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px #ccc;
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 350px;
+            margin-top: 20px;
+            border-radius: 8px;
+        }
+
+        button, input {
+            margin: 10px 5px;
+            padding: 10px;
+        }
+
+        button {
+            background: #1769ff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #preview {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Image Application</h1>
+        <p>Upload, preview, and download your image.</p>
+
+        <input type="file" id="upload" accept="image/*">
+
+        <div>
+            <img id="preview" alt="Image preview">
+        </div>
+
+        <div>
+            <button onclick="rotateImage()">Rotate Image</button>
+            <button onclick="downloadImage()">Download Image</button>
+        </div>
+    </div>
+
+    <script>
+        const upload = document.getElementById("upload");
+        const preview = document.getElementById("preview");
+
+        let rotation = 0;
+
+        upload.addEventListener("change", function () {
+            const file = this.files[0];
+
+            if (file && file.type.startsWith("image/")) {
+                preview.src = URL.createObjectURL(file);
+                preview.style.display = "inline-block";
+                rotation = 0;
+                preview.style.transform = "rotate(0deg)";
+            }
+        });
+
+        function rotateImage() {
+            if (!preview.src) return;
+
+            rotation = (rotation + 90) % 360;
+            preview.style.transform = `rotate(${rotation}deg)`;
+        }
+
+        function downloadImage() {
+            if (!preview.src || !upload.files[0]) {
+                alert("Please upload an image first.");
+                return;
+            }
+
+            const link = document.createElement("a");
+            link.href = preview.src;
+            link.download = upload.files[0].name;
+            link.click();
+        }
+    </script>
+</body>
+</html>
